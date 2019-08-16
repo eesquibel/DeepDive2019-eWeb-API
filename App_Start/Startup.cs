@@ -25,14 +25,8 @@ namespace DeepDive2019.eWeb.API
             // Enable CORS
             config.EnableCors();
 
-            // Web API routes
+            // Web API attribute routes
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
 
             config.Formatters.JsonFormatter.AddQueryStringMapping("format", "json", "application/json");
             config.Formatters.XmlFormatter.AddQueryStringMapping("format", "xml", "application/xml");
@@ -41,6 +35,13 @@ namespace DeepDive2019.eWeb.API
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            // Web API routes
+            routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            ).RouteHandler = new SessionStateRouteHandler();
 
             // MVC routes
             routes.MapRoute(
