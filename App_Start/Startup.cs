@@ -1,5 +1,6 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -32,6 +33,9 @@ namespace DeepDive2019.eWeb.API
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Formatters.JsonFormatter.AddQueryStringMapping("format", "json", "application/json");
+            config.Formatters.XmlFormatter.AddQueryStringMapping("format", "xml", "application/xml");
         }
 
         public static void RegisterRoutes(RouteCollection routes)
