@@ -8,7 +8,12 @@ using System.Web.Http.Cors;
 
 namespace DeepDive2019.eWeb.API.Controllers
 {
-    [EnableCors(origins: "", headers: "", methods: "")]
+#if DEBUG
+    [EnableCors(origins: "*", headers: "Content-Type", methods: "GET,PUT", SupportsCredentials = true)]
+#else
+    #warning Change the origins to match your production setup
+    [EnableCors(origins: "", headers: "Content-Type", methods: "GET,PUT", SupportsCredentials = true)]
+#endif
     public class IndividualController : ApiController
     {
         Guid? CustomerKey;
@@ -39,7 +44,7 @@ namespace DeepDive2019.eWeb.API.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            Dictionary<string, object> result = Individual.GetDataObjectDictionary("id");
+            Dictionary<string, object> result = Individual.GetDataObjectDictionary(id);
 
             return result;
         }

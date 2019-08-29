@@ -47,7 +47,14 @@ namespace DeepDive2019.eWeb.API
         {
             var result = new Dictionary<string, object>();
 
-            foreach (DictionaryEntry pair in facade.GetDataObject(id).GetFields())
+            var data = facade.GetDataObject(id);
+
+            if (data == null)
+            {
+                return null;
+            }
+
+            foreach (DictionaryEntry pair in data.GetFields())
             {
                 Field field = (Field)pair.Value;
 
