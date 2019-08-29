@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="ApiResponseException.cs" />
     <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="Controllers\DirectoryController.cs" />
     <Compile Include="Controllers\IndividualController.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Extensions.cs" />
