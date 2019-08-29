@@ -1,16 +1,14 @@
 ﻿using Avectra.netForum.Data;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace DeepDive2019.eWeb.API.Controllers
 {
+    [EnableCors(origins: "", headers: "", methods: "")]
     public class IndividualController : ApiController
     {
         Guid? CustomerKey;
@@ -41,25 +39,7 @@ namespace DeepDive2019.eWeb.API.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var result = new Dictionary<string, object>();
-
-            foreach (DictionaryEntry pair in Individual.GetDataObject(id).GetFields())
-            {
-                Field field = (Field)pair.Value;
-
-                if (field == null || field.ValueNative == null)
-                {
-                    continue;
-                }
-
-                // Skip hidden fields
-                if (!field.CanSelect || field.Properties.Hidden)
-                {
-                    continue;
-                }
-
-                result.Add((string)pair.Key, field.ValueNative);
-            }
+            Dictionary<string, object> result = Individual.GetDataObjectDictionary("id");
 
             return result;
         }
@@ -77,29 +57,7 @@ namespace DeepDive2019.eWeb.API.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            foreach (var pair in update)
-            {
-                var token = pair.Value;
-                var field = Individual.GetField(pair.Key);
-
-                // Make sure the field exists
-                if (field == null)
-                {
-                    continue;
-                }
-
-                // Skip read-only fields
-                if (!field.CanUpdate || field.Properties.ReadOnly || field.Properties.ReadOnlyEdit || field.Properties.NotEditable)
-                {
-                    continue;
-                }
-
-                // Make sure its a scalar type
-                if (token is JValue jvalue)
-                {
-                    field.ValueNative = jvalue.Value;
-                }
-            }
+            Individual.Merge(update);
 
             using (var connection = DataUtils.GetConnection())
             {
@@ -111,17 +69,10 @@ namespace DeepDive2019.eWeb.API.Controllers
                     {
                         transaction.Rollback();
 
-                        throw new HttpResponseException
-                        (
-                            new HttpResponseMessage(HttpStatusCode.InternalServerError)
-                            {
-                                Content = new StringContent(JsonConvert.SerializeObject(new
-                                {
-                                    error.Message,
-                                    error.UserMessage,
-                                    error.Number
-                                }), Encoding.UTF8, "application/json")
-                            }
+                        throw new ApiResponseException(
+                            status: HttpStatusCode.InternalServerError,
+                            message: error.Message,
+                            code: error.Number
                         );
                     }
 
