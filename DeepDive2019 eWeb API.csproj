@@ -142,6 +142,7 @@
     <Compile Include="Models\Decorators\UpdateAttribute.cs" />
     <Compile Include="Models\Decorators\CreateAttribute.cs" />
     <Compile Include="Models\Decorators\ReadAttribute.cs" />
+    <Compile Include="Models\AnotherExample.cs" />
     <Compile Include="Models\ExampleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionableControllerHandler.cs" />

@@ -9,7 +9,7 @@ namespace DeepDive2019.eWeb.API.Models
 {
 
     [Serializable, JsonObject]
-    [Create, Read, Update]
+    [Read, Update]
     public class ExampleModel
     {
         [JsonIgnore]
