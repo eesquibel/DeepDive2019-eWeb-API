@@ -81,9 +81,13 @@ namespace DeepDive2019.eWeb.API.Controllers
                         );
                     }
 
+                    Individual.ProcessRoundTripEvents(connection, transaction);
+
                     transaction.Commit();
                 }
             }
+
+            Individual.AfterSave();
 
             return Get(id);
         }
